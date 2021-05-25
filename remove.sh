@@ -16,6 +16,32 @@ echo -e "\n-----------------------------------uninstall docker------------------
 systemctl disable docker.service && systemctl stop docker.service && systemctl daemon-reload
 
 echo -e "\n-------------------------------------delete file----------------------------------------"
-rm -rf /usr/local/bin/
+
+docker_arr=(
+  "containerd"
+  "containerd-shim"
+  "ctr"
+  "docker"
+  "dockerd"
+  "docker-init"
+  "docker-proxy"
+  "runc"
+
+)
+
+if [[ -f "/usr/local/bin/docker" ]]
+  then
+    
+    for item in ${docker_arr[*]}
+    do
+        rm -rf /usr/local/bin/$item
+    done
+
+fi
+
 rm -rf /etc/docker
 rm -rf /etc/systemd/system/docker.service
+
+echo -e "\n-------------------------------------uninstall succeed----------------------------------------"
+
+
