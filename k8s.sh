@@ -23,10 +23,6 @@ done
 echo -e "\n-------------------------------install kubernetes----------------------------"
 
 k8s_image=(
-    "calico/node"
-    "calico/pod2daemon-flexvol"
-    "calico/cni"
-    "calico/kube-controllers"
     "registry.aliyuncs.com/google_containers/kube-proxy:v1.18.0"
     "registry.aliyuncs.com/google_containers/kube-apiserver:v1.18.0"
     "registry.aliyuncs.com/google_containers/kube-controller-manager:v1.18.0"

@@ -87,7 +87,7 @@ stat=`systemctl status rpcbind | grep Active | awk -F " +" '{print $3}'`
 if [[ $stat = "active" ]];then
         echo -e "nfs is installed"
 else
-        echo -e "please install nfs service"
+        bash ../nfs.sh
 fi
 
 #启动上层pod服务

@@ -77,7 +77,7 @@ sleep 3
 echo -e "\n-------------------------------check kubernetes status----------------------------"
 stat=`systemctl status kubelet | grep Active | awk -F " +" '{print $3}'`
 
-if [[ $stat = "activee" ]];then
+if [[ $stat = "active" ]];then
 	echo -e "kubernetes is installed"
 else
 	echo -e "start install kubernetes"
