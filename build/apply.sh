@@ -30,6 +30,14 @@ image=(
     "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/prom/node-exporter:v0.18.1"
     "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/nvidia/k8s-device-plugin:1.11"
     "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/busybox:v1.28"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/dlworkspace_image-label:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-serving-queue:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-serving-activator:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-serving-autoscaler:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-serving-controller:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-serving-webhook:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-net-istio-controller:latest"
+    "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/knative-net-istio-webhook:latest"
 )
 
 for im in ${image[*]}
@@ -58,6 +66,7 @@ arr1=(
     "aiarts-frontend"
 #    "mlflow"
     "volcanosh"
+    "image-label"
 )
 
 #修改环境ip
@@ -68,7 +77,7 @@ do
 	n=`cd $item1 && ls -l | grep ^- | awk -F " +" '{print $9}'`
         #old_ip=`grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' aiarts-backend/01.aiarts_cm.yaml | tail -1`
 	#echo $n
-        cd $item1 && for file in $n ; do ( sed -i s/conip/192.168.2.178/g $file); done ; cd ../
+        cd $item1 && for file in $n ; do ( sed -i s/conip/192.168.2.182/g $file); done ; cd ../
 	
 done
 
@@ -78,15 +87,11 @@ stat=`systemctl status rpcbind | grep Active | awk -F " +" '{print $3}'`
 if [[ $stat = "active" ]];then
         echo -e "nfs is installed"
 else
-        echo "start install nfs"
-        bash nfs.sh
-        showmount -e $eth_ip
+        echo -e "please install nfs service"
 fi
 
 #启动上层pod服务
 echo -e "\n-------------------------------running Apulis AI Platform service ----------------------------"
-#length=${#arr}
-#echo "长度为：$length"
 
 # for 遍历服务目录
 for item1 in ${arr1[*]}
@@ -116,6 +121,7 @@ do
 	n=`cd $item2 && ls | grep '^[0-9]'`
 	#echo $n
 	cd $item2 && for file in $n ; do ( echo $file; kubectl apply -f $file ); done ; cd ../
+	bash preset_models.sh
     
 done
 

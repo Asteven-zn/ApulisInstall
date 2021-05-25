@@ -4,6 +4,21 @@ host_ip=$1
 
 echo $host_ip
 
+#下载calico image
+echo -e "\n-------------------------------down calico image-----------------------------"
+
+calico_image=(
+  "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/calico/node:v3.19.1"
+  "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/calico/pod2daemon-flexvol:v3.19.1"
+  "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/calico/cni:v3.19.1"
+  "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/calico/kube-controllers:v3.19.1"
+)
+
+for c_image in ${$calico_image[*]}
+  do
+    docker pull $c_image
+done
+
 #安装k8s
 echo -e "\n-------------------------------install kubernetes----------------------------"
 apt-get update && apt-get install apt-transport-https -y
@@ -30,6 +45,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 kubectl apply -f calico.yaml
 
@@ -43,11 +59,15 @@ fi
 sleep 3
 
 #kubectl 命令自动补全
-echo "kubectl completion" >> ~/.bashrc
-source <(kubectl completion bash)
+apt install bash-completion
+echo "source /usr/share/bash-completion/bash_completion" >> ~/.bashrc
+echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 #节点打lable
 echo -e "\n-------------------------------node lable tag----------------------------"
 kubectl label node $HOSTNAME node-role.kubernetes.io/worker=worker
 kubectl taint nodes --all node-role.kubernetes.io/master-
 bash lab.sh
+
+#添加/opt/kube/bin/kubectl
+cp /usr/bin/kubectl /opt/kube/bin/

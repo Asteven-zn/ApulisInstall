@@ -1,7 +1,7 @@
 #/bin/bash
 
 #配置服务器的网卡ip地址
-eth_ip=192.168.2.178
+eth_ip=192.168.2.182
 
 #准备工作
 echo -e "\n-------------------------------prepare file----------------------------"
@@ -22,13 +22,12 @@ tar zxf app.tar.gz
 
 if [[ ! -f "/usr/local/bin/docker" ]]
   then
-        mkdir -p /etc/docker
-        mkdir -p /root/.docker
+    mkdir -p /etc/docker
 
-  for item in ${docker_arr[*]}
-  do	
+    for item in ${docker_arr[*]}
+    do	
 	cp app/$item /usr/local/bin/
-  done
+    done
 
 fi
 
@@ -49,10 +48,10 @@ sed -ri 's/.*swap.*/#&/' /etc/fstab
 
 echo -e "\n-------------------------------config iptables---------------------------"
 
-iptables -P INPUT ACCEPT && iptables -F && iptables -X \
-&& iptables -F -t nat && iptables -X -t nat \
-&& iptables -F -t raw && iptables -X -t raw \
-&& iptables -F -t mangle && iptables -X -t mangle
+#iptables -P INPUT ACCEPT && iptables -F && iptables -X \
+#&& iptables -F -t nat && iptables -X -t nat \
+#&& iptables -F -t raw && iptables -X -t raw \
+#&& iptables -F -t mangle && iptables -X -t mangle
 
 if [ $? -ne 0 ];then
         echo -e "config iptables failed"
@@ -69,7 +68,7 @@ if [[ $stat = "active" ]];then
         echo -e "docker is installed"
 else
         echo -e "start install docker"
-        bash docker.sh
+        bash modules/docker.sh
 fi
 
 sleep 3
@@ -82,7 +81,7 @@ if [[ $stat = "active" ]];then
 	echo -e "kubernetes is installed"
 else
 	echo -e "start install kubernetes"
-        bash k8s.sh $eth_ip
+        bash modules/k8s.sh $eth_ip
 
 fi
 
@@ -96,7 +95,7 @@ if [[ $stat = "active" ]];then
         echo -e "nfs is installed"
 else
         echo "start install nfs"
-        bash nfs.sh
+        bash modules/nfs.sh
         showmount -e $eth_ip
 fi
 
