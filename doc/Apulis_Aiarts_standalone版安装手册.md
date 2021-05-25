@@ -30,19 +30,23 @@ cd /home && git clone https://github.com/Asteven-zn/ApulisInstaller.git
 
   ```shell
   InstallApulis
-  ├── app.tar.gz         用到的二进制文件
-  ├── build              aiarts的yaml文件
-  │   ├── apply.sh       aiarts脚本
-  ├── credentials        认证信息文件
-  ├── daemon.json
-  ├── docker.sh          docker脚本
-  ├── install.sh         部署主程序
-  ├── k8s.sh             kubernetes脚本
-  ├── lab.sh             node lable脚本
-  ├── nfs.sh             nfs-server脚本
-  ├── nginxfile.tar.gz
-  └── remove.sh          卸载平台脚本
-  └── nginxfile.tar.gz   nginx相关配置文件
+  ├── build                  aiarts的yaml文件
+  │   ├── apply.sh           aiarts脚本
+  │   ├── applyrm.sh         aiarts删除脚本
+  │   ├── preset_models.sh   数据库配置脚本
+  │   ├── preset_models.sql  数据库sql
+  ├── credentials            认证信息文件
+  ├── modules                
+  │   ├── docker.sh          docker脚本
+  │   ├── image.sh           镜像下载脚本
+  │   ├── k8s.sh             kubernetes脚本
+  │   ├── lab.sh             node lable脚本
+  │   ├── nfs.sh             nfs-server脚本
+  │   ├── calico.yaml        calico网络部署
+  ├── yaml                   aiarts的yaml模板文件
+  ├── app.tar.gz             用到的二进制文件
+  └── remove.sh              卸载平台脚本
+  └── nginxfile.tar.gz       nginx相关配置文件
   ```
 
 #### 2.进入安装包目录

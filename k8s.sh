@@ -14,13 +14,33 @@ calico_image=(
   "harbor.apulis.cn:8443/aiarts_v1.5.0_rc8/apulistech/calico/kube-controllers:v3.19.1"
 )
 
-for c_image in ${$calico_image[*]}
+for c_image in ${calico_image[*]}
   do
     docker pull $c_image
 done
 
 #安装k8s
 echo -e "\n-------------------------------install kubernetes----------------------------"
+
+k8s_image=(
+    "calico/node"
+    "calico/pod2daemon-flexvol"
+    "calico/cni"
+    "calico/kube-controllers"
+    "registry.aliyuncs.com/google_containers/kube-proxy:v1.18.0"
+    "registry.aliyuncs.com/google_containers/kube-apiserver:v1.18.0"
+    "registry.aliyuncs.com/google_containers/kube-controller-manager:v1.18.0"
+    "registry.aliyuncs.com/google_containers/kube-scheduler:v1.18.0"
+    "registry.aliyuncs.com/google_containers/pause:3.2"
+    "registry.aliyuncs.com/google_containers/coredns:1.6.7"
+    "registry.aliyuncs.com/google_containers/etcd:3.4.3-0"
+)
+
+for k_image in ${k8s_image[*]}
+  do
+    docker pull $k_image
+done
+
 apt-get update && apt-get install apt-transport-https -y
 
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -
@@ -45,23 +65,33 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-
+echo -e "\n-------------------------------install calico network----------------------------"
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 kubectl apply -f calico.yaml
 
 if [ $? -ne 0 ];then
-        echo -e "*************************k8s install failed********************************"
+        echo -e "*************************install calico network failed********************************"
 else    
-        echo -e "*************************k8s install succeed********************************"
+        echo -e "*************************install calico network succeed********************************"
         kubectl get node
 fi
 
 sleep 3
 
 #kubectl 命令自动补全
+kc=`grep kubectl ~/.bashrc`
+
+if [ $? -ne 0 ];then
+        apt install bash-completion
+        echo "source /usr/share/bash-completion/bash_completion" >> ~/.bashrc
+        echo "source <(kubectl completion bash)" >> ~/.bashrc
+        source ~/.bashrc
+fi
+
 apt install bash-completion
 echo "source /usr/share/bash-completion/bash_completion" >> ~/.bashrc
 echo "source <(kubectl completion bash)" >> ~/.bashrc
+source ~/.bashrc
 
 #节点打lable
 echo -e "\n-------------------------------node lable tag----------------------------"

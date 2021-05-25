@@ -1,7 +1,7 @@
 #/bin/bash
 
 #配置服务器的网卡ip地址
-eth_ip=192.168.2.182
+eth_ip=192.168.2.183
 
 #准备工作
 echo -e "\n-------------------------------prepare file----------------------------"
@@ -68,7 +68,7 @@ if [[ $stat = "active" ]];then
         echo -e "docker is installed"
 else
         echo -e "start install docker"
-        bash modules/docker.sh
+        bash docker.sh
 fi
 
 sleep 3
@@ -77,11 +77,11 @@ sleep 3
 echo -e "\n-------------------------------check kubernetes status----------------------------"
 stat=`systemctl status kubelet | grep Active | awk -F " +" '{print $3}'`
 
-if [[ $stat = "active" ]];then
+if [[ $stat = "activee" ]];then
 	echo -e "kubernetes is installed"
 else
 	echo -e "start install kubernetes"
-        bash modules/k8s.sh $eth_ip
+        bash k8s.sh $eth_ip
 
 fi
 
@@ -95,7 +95,7 @@ if [[ $stat = "active" ]];then
         echo -e "nfs is installed"
 else
         echo "start install nfs"
-        bash modules/nfs.sh
+        bash nfs.sh
         showmount -e $eth_ip
 fi
 

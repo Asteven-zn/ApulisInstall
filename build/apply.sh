@@ -77,7 +77,7 @@ do
 	n=`cd $item1 && ls -l | grep ^- | awk -F " +" '{print $9}'`
         #old_ip=`grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' aiarts-backend/01.aiarts_cm.yaml | tail -1`
 	#echo $n
-        cd $item1 && for file in $n ; do ( sed -i s/conip/192.168.2.182/g $file); done ; cd ../
+        cd $item1 && for file in $n ; do ( sed -i s/conip/192.168.2.183/g $file); done ; cd ../
 	
 done
 
