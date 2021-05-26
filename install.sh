@@ -1,7 +1,8 @@
 #/bin/bash
 
 #配置服务器的网卡ip地址
-eth_ip=192.168.2.183
+#eth_ip=192.168.2.183
+eth_ip=$1
 
 #准备工作
 echo -e "\n-------------------------------prepare file----------------------------"
@@ -31,8 +32,8 @@ if [[ ! -f "/usr/local/bin/docker" ]]
 
 fi
 
-oldip=`grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' build/apply.sh`
-sed -i s/$oldip/$eth_ip/g build/apply.sh
+oldip=`grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' apply.sh`
+sed -i s/$oldip/$eth_ip/g apply.sh
 
 echo -e "\n------------------------------stop firewalld---------------------------"
 
@@ -101,9 +102,8 @@ fi
 
 #部署Apulis AI Platform
 echo -e "\n-------------------------------install Apulis AI Platform----------------------------"
-if [[ ! -d "/etc/nginx/ssl" && "/opt/kube/bin/" ]];then
+if [[ ! -d "/etc/nginx/ssl" ]];then
     mkdir -p /etc/nginx/conf.other
-    mkdir -p /opt/kube/bin
     mv app/ssl /etc/nginx/ && mv app/default.conf /etc/nginx/conf.other/
     mv app/istioctl /opt/kube/bin/ && chmod +x /opt/kube/bin/istioctl
 fi
@@ -111,7 +111,7 @@ fi
 stat=`kubectl get pod -n kube-system | grep calico | wc -l`
 
 if [ $stat = 2 ];then
-        cd build && bash apply.sh $eth_ip
+        bash apply.sh
 else
         echo "calico network is no ready"
 fi

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "\n-------------------------------uninstall Apulis AI Platform----------------------------"
-cd build && bash applyrm.sh
+bash applyrm.sh
 
 echo -e "\n---------------------------------uninstall kubernetes----------------------------------"
 kubeadm reset -f
@@ -43,5 +43,3 @@ rm -rf /etc/docker
 rm -rf /etc/systemd/system/docker.service
 
 echo -e "\n-------------------------------------uninstall succeed----------------------------------------"
-
-

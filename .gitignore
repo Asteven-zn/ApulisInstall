@@ -9,5 +9,6 @@
 *.deb
 *.tgz
 *.retry
+build
+app
 download/ca.pem
-

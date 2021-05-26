@@ -95,5 +95,9 @@ kubectl label node $HOSTNAME node-role.kubernetes.io/worker=worker
 kubectl taint nodes --all node-role.kubernetes.io/master-
 bash lab.sh
 
-#添加/opt/kube/bin/kubectl
-cp /usr/bin/kubectl /opt/kube/bin/
+##添加/opt/kube/bin/kubectl
+echo -e "\n------------------------add /opt/kube/bin/kubectl-------------------------"
+if [[ ! -d "/opt/kube/bin/" ]];then
+    mkdir -p /opt/kube/bin
+    cp /usr/bin/kubectl /opt/kube/bin/
+fi
